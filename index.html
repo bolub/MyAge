@@ -69,7 +69,7 @@
             <div class="my-3">
 
               <input autofocus class="form-control border-0 form-control-lg text-center" list="ageTest" id="ageValue"
-                placeholder="Type to search...">
+                placeholder="Type to search..." type='number'>
               <datalist id="ageTest">
               </datalist>
 
@@ -127,7 +127,16 @@
       const ageTitle = document.querySelector('#title');
       const formWrapper = document.querySelector('#form-wrapper')
       const currentYear = new Date().getFullYear();
-      const calculatedAge = parseInt(currentYear - yearOfBirth, 10);
+
+      const isFutureYear = yearOfBirth > currentYear
+
+      let calculatedAge = parseInt(currentYear - yearOfBirth, 10);
+
+      if (isFutureYear) {
+        alert("That's a year in the future, stay in the present")
+        return;
+      }
+
 
       if (!yearOfBirth) return;
 
@@ -144,15 +153,17 @@
         emojiToUse = '👨‍🦳👩‍🦳'
       }
 
+      const toPass = `
+      <p class='fs-3 fw-bold text-black-50'>
+        You're <span class='text-primary fw-bold'>${calculatedAge} year(s)</span> old</p>
+      `
 
-      // ageTitle.textContent = "You are"
       ageTitle.className = "d-none"
 
       formWrapper.innerHTML = `
       <p class='mb-1 fs-3'>${emojiToUse}</p>
-      <p class='fs-3 fw-bold text-black-50'>
-        You're <span class='text-primary fw-bold'>${calculatedAge} year(s)</span> old</p>
-      `
+     ${toPass}
+`
 
       recheck.className = 'd-block text-decoration-underline'
 
