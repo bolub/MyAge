@@ -22,10 +22,6 @@
       font-family: 'Kumbh Sans', sans-serif;
     }
 
-    .select2-container {
-      width: 100%;
-      height: 30px;
-    }
 
     input {
       outline: none;
@@ -41,7 +37,7 @@
     crossorigin="anonymous"></script>
 </head>
 
-<body class="px-3 px-md-5 pt-5">
+<body class="px-3 px-md-5 pt-3 pt-md-5">
 
   <!-- nav -->
   <nav class="d-flex w-100">
@@ -94,7 +90,7 @@
 
   <!-- footer -->
   <footer class="d-flex small">
-    <p class="m-auto">
+    <p class="m-auto mb-0">
       Built by <a href='https://boluabiola.com/' target="__blank">Boluwatife Abiola</a>
     </p>
   </footer>
@@ -132,6 +128,8 @@
       const formWrapper = document.querySelector('#form-wrapper')
       const currentYear = new Date().getFullYear();
       const calculatedAge = parseInt(currentYear - yearOfBirth, 10);
+
+      if (!yearOfBirth) return;
 
       let emojiToUse = '👶'
       if (calculatedAge >= 13 && calculatedAge <= 18) {
