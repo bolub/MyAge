@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Age</title>
+  <title>👶 My Age</title>
 
   <!-- fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -34,13 +34,22 @@
     crossorigin="anonymous"></script>
 </head>
 
-<body>
-  <main class="position-relative">
-    <p class="position-absolute fw-bold fs-5" style="top: 40px; left: 40px">
-      👶 My Age
-    </p>
+<body class="px-3 px-md-5 pt-5">
 
-    <div class="d-flex vh-100 border w-100">
+  <!-- nav -->
+  <nav class="d-flex w-100">
+    <span class="fw-bold fs-5 my-auto mr-auto flex-grow-1">
+      👶 My Age
+    </span>
+
+    <div class="my-auto">
+      <a href="https://github.com/bolub/MyAge" target="__blank">Github</a>
+    </div>
+  </nav>
+
+  <main class="position-relative w-100" style="height: 80vh;">
+
+    <div class="d-flex w-100 h-100">
       <div style="max-width: 500px;" class="m-auto text-center">
         <h1 class="fs-4" id='title'>What year were you born?</h1>
 
@@ -67,8 +76,16 @@
 
       <p id='recheck' style="cursor: pointer;" onclick="window.location.href='/'" class="d-none">Check again</p>
     </div>
+
+
   </main>
 
+  <!-- footer -->
+  <footer class="d-flex small">
+    <p class="m-auto">
+      Built by <a href='https://boluabiola.com/' target="__blank">Boluwatife Abiola</a>
+    </p>
+  </footer>
 
 
 
