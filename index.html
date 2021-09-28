@@ -19,11 +19,12 @@
   <!-- styles -->
   <style>
     body {
-      font-family: 'Kumbh Sans', sans-serif;
+      font-family: 'Kumbh Sans', sans-serif !important;
     }
 
 
-    input {
+    input,
+    select {
       outline: none;
       box-shadow: none !important;
       padding-left: 0 !important;
@@ -37,7 +38,7 @@
     crossorigin="anonymous"></script>
 </head>
 
-<body class="px-3 px-md-5 pt-3 pt-md-5">
+<body onload='toggle()' class="px-3 px-md-5 pt-3 pt-md-5">
 
   <!-- nav -->
   <nav class="d-flex w-100">
@@ -61,25 +62,48 @@
 
     <div class="d-flex w-100 h-100">
       <div style="max-width: 500px;" class="m-auto text-center">
-        <h1 class="fs-4" id='title'>What year were you born?</h1>
+
+        <!-- <h1 class="fs-4" id='title'>What year were you born?</h1> -->
+
+        <select onchange="toggle()" class="form-select form-select-lg mb-0 border-0 fs-bold text-center"
+          id='questionSelect'>
+          <option selected value='current'>What year were you born?</option>
+          <option value='future'>How old will I be in?</option>
+        </select>
 
 
         <div id="form-wrapper">
           <form id="ageForm">
             <div class="my-3">
 
-              <input autofocus class="form-control border-0 form-control-lg text-center" list="ageTest" id="ageValue"
-                placeholder="Type to search..." type='number' min="0">
-              <datalist id="ageTest">
-              </datalist>
+              <div class="d-flex">
+
+                <div id='currentYearForm' class="my-auto">
+                  <input autofocus class="form-control border-0 form-control-lg text-center" list="currentAgeSelect"
+                    id="currentAgeValue" placeholder="Type to Search..." type='number' min="0">
+                  <datalist id="currentAgeSelect">
+                  </datalist>
+                </div>
 
 
-
+                <div id='futureYearForm' class="my-auto d-none">
+                  <input autofocus class="form-control border-0 form-control-lg text-center" list="futureAgeSelect"
+                    id="futureAgeValue" placeholder="Future Year..." type='number' min="0">
+                  <datalist id="futureAgeSelect">
+                  </datalist>
+                </div>
+              </div>
               <button type="submit" class="btn btn-dark btn-block w-100 mt-4" style="height: 45px">
                 Check my age
               </button>
           </form>
         </div>
+
+
+        <div class="d-flex">
+
+        </div>
+
       </div>
 
       <p id='recheck' style="cursor: pointer;" onclick="window.location.href='/'" class="d-none">Check again</p>
@@ -97,40 +121,64 @@
 
 
 
-  <!-- get year -->
+  <!-- Get years -->
   <script>
-    const ageTest = document.querySelector('#ageTest');
+    const currentAgeSelect = document.querySelector('#currentAgeSelect');
+    const futureAgeSelect = document.querySelector('#futureAgeSelect');
+
 
     let startYear = 1800;
     let endYear = new Date().getFullYear();
 
-
     for (let i = endYear; i > startYear; i--) {
-
       let option = document.createElement('option');
       option.value = i;
-      ageTest.appendChild(option);
-
+      currentAgeSelect.appendChild(option);
+      futureAgeSelect.appendChild(option);
     }
-
-
   </script>
 
-  <!-- onsubmit -->
+  <!-- toggle -->
+  <script>
+    const toggle = () => {
+
+      const questionSelect = document.querySelector('#questionSelect').value;
+      const currentYearForm = document.querySelector('#currentYearForm');
+      const currentYearFormValue = document.querySelector('#currentAgeValue');
+      const futureYearForm = document.querySelector('#futureYearForm');
+
+
+      if (questionSelect === 'current') {
+        futureYearForm.className = 'my-auto d-none'
+        currentYearFormValue.placeholder = 'Type to Search...'
+      } else {
+        futureYearForm.className = 'my-auto d-block'
+        currentYearFormValue.placeholder = 'Any Year...'
+      }
+    }
+  </script>
+
+  <!-- Onsubmit -->
   <script>
     ageForm.onsubmit = (e) => {
       e.preventDefault();
 
       const recheck = document.querySelector('#recheck');
 
-      const yearOfBirth = document.querySelector('#ageValue').value;
-      const ageTitle = document.querySelector('#title');
+      const currentYearOfBirth = document.querySelector('#currentAgeValue').value;
+      const futureYearOfBirth = document.querySelector('#futureAgeValue').value;
+
+
+      const questionSelect = document.querySelector('#questionSelect');
+      const questionSelectValue = document.querySelector('#questionSelect').value;
+
+
       const formWrapper = document.querySelector('#form-wrapper')
       const currentYear = new Date().getFullYear();
 
-      const isFutureYear = yearOfBirth > currentYear
+      const isFutureYear = currentYearOfBirth > currentYear;
 
-      let calculatedAge = parseInt(currentYear - yearOfBirth, 10);
+      let calculatedAge = parseInt(currentYear - currentYearOfBirth, 10);
 
       if (isFutureYear) {
         alert("That's a year in the future, stay in the present")
@@ -138,7 +186,18 @@
       }
 
 
-      if (!yearOfBirth) return;
+      if (questionSelectValue === 'future') {
+        calculatedAge = futureYearOfBirth - currentYearOfBirth;
+
+        if (futureYearOfBirth < currentYearOfBirth) {
+          alert('Your future must be greater than your present')
+          return;
+        }
+      };
+
+
+      if (!currentYearOfBirth) return;
+
 
       let emojiToUse = '👶'
       if (calculatedAge >= 13 && calculatedAge <= 18) {
@@ -152,13 +211,17 @@
       if (calculatedAge >= 50) {
         emojiToUse = '👨‍🦳👩‍🦳'
       }
-
-      const toPass = `
+      console.log(questionSelectValue)
+      const toPass = questionSelectValue === 'future' ?
+        `
       <p class='fs-3 fw-bold text-black-50'>
-        You're <span class='text-primary fw-bold'>${calculatedAge} year(s)</span> old</p>
+        You'll be <span class='text-primary fw-bold'>${calculatedAge} year(s)</span> old by ${futureYearOfBirth}</p>
       `
+        :
+        `<p class='fs-3 fw-bold text-black-50'>
+        You're <span class='text-primary fw-bold'>${calculatedAge} year(s)</span> old</p>`
 
-      ageTitle.className = "d-none"
+      questionSelect.className = "d-none"
 
       formWrapper.innerHTML = `
       <p class='mb-1 fs-3'>${emojiToUse}</p>
